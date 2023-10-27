@@ -1,0 +1,47 @@
+name: Go CI/CD
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    name: Build and Test
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.21.1' # Ganti dengan versi Go yang sesuai
+
+      - name: Install Dependencies
+        run: go mod download
+
+      - name: Run Tests
+        run: go test ./...
+
+      - name: Build Application
+        run: go build -o my-rest-api
+
+  deploy:
+    name: Deploy to Server # Sesuaikan nama dan langkah-langkah sesuai dengan kebutuhan Anda
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up SSH Key
+        uses: webfactory/ssh-agent@v0.4.1
+        with:
+          ssh-private-key: ${{ secrets.SSH_PRIVATE_KEY }} # Ganti dengan nama secret SSH Anda
+
+      - name: Deploy to Server
+        run: |
+          ssh -i ${{ secrets.SSH_PRIVATE_KEY }} user@server_address "cd /path/to/deployment && ./deploy.sh" # Ganti dengan perintah deploy yang sesuai
+
