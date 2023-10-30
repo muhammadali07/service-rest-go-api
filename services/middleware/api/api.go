@@ -6,7 +6,7 @@ import (
 	"github.com/go-playground/validator"
 	"github.com/gofiber/fiber/v2"
 	"github.com/muhammadali07/service-rest-go-api/pkg/log"
-	"github.com/muhammadali07/service-rest-go-api/services/app"
+	"github.com/muhammadali07/service-rest-go-api/services/middleware/app"
 	"github.com/sirupsen/logrus"
 )
 

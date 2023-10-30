@@ -16,6 +16,7 @@ type Config struct {
 	DatabaseUser     string
 	DatabasePassword string
 	Database         string
+	Service          string
 }
 
 // InitConfig inisialisasi konfigurasi menggunakan Viper.
@@ -42,6 +43,7 @@ func InitConfig() (*Config, error) {
 		DatabaseUser:     viper.GetString("DatabaseUser"),
 		DatabasePassword: viper.GetString("DatabasePassword"),
 		Database:         viper.GetString("Database"),
+		Service:          viper.GetString("Service"),
 	}
 
 	return config, nil

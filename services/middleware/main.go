@@ -3,17 +3,18 @@ package main
 import (
 	"github.com/muhammadali07/service-rest-go-api/pkg/log"
 	"github.com/muhammadali07/service-rest-go-api/pkg/utils"
-	"github.com/muhammadali07/service-rest-go-api/services/api"
-	"github.com/muhammadali07/service-rest-go-api/services/app"
-	"github.com/muhammadali07/service-rest-go-api/services/datastore"
+	"github.com/muhammadali07/service-rest-go-api/services/middleware/api"
+	"github.com/muhammadali07/service-rest-go-api/services/middleware/app"
+	"github.com/muhammadali07service-rest-go-api/services/middleware/datastore"
 	"github.com/sirupsen/logrus"
 )
 
 func main() {
-	logger := log.NewLogger("middleware-rest-api")
-
 	// Inisialisasi konfigurasi
 	cfg, err := utils.InitConfig()
+
+	logger := log.NewLogger(cfg.Service)
+
 	if err != nil {
 		logger.Fatal(
 			logrus.Fields{
