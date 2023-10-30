@@ -5,7 +5,7 @@ import (
 	"github.com/muhammadali07/service-rest-go-api/pkg/utils"
 	"github.com/muhammadali07/service-rest-go-api/services/middleware/api"
 	"github.com/muhammadali07/service-rest-go-api/services/middleware/app"
-	"github.com/muhammadali07service-rest-go-api/services/middleware/datastore"
+	"github.com/muhammadali07/service-rest-go-api/services/middleware/datastore"
 	"github.com/sirupsen/logrus"
 )
 
