@@ -31,7 +31,7 @@ func (m *MiddlewareAPI) Start() {
 	if err := app.Listener(listener); err != nil {
 		m.log.Fatal(logrus.Fields{
 			"error": err.Error(),
-		}, "nil", "failed to server grpc API")
+		}, "nil", "failed to server Middleware API")
 	}
 }
 

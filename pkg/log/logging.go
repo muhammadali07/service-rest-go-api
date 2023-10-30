@@ -1,6 +1,7 @@
 package log
 
 import (
+	"encoding/json"
 	"io"
 
 	"github.com/sirupsen/logrus"
@@ -12,50 +13,38 @@ type Logger struct {
 	log *logrus.Entry
 }
 
-func (l *Logger) Info(fields map[string]interface{}, method, message string) {
-	if method != "" {
-		l.log.WithFields(logrus.Fields{
-			"method": method,
-		}).WithFields(fields).Info(message)
-	} else {
-		l.log.WithFields(fields).Info(message)
+func (l *Logger) BaseLog(fields map[string]interface{}, data interface{}) (log *logrus.Entry) {
+	file, function, line := GetCaller()
+	log = l.log.WithFields(logrus.Fields{
+		"file":     file,
+		"line":     line,
+		"function": function,
+	}).WithFields(fields)
+	if data != nil {
+		payload, err := json.Marshal(data)
+		if err != nil {
+			log = log.WithField("data_error", err.Error())
+			return
+		}
+		log = log.WithField("data", string(payload))
 	}
+	return
 }
-func (l *Logger) Warn(fields map[string]interface{}, method, message string) {
-	if method != "" {
-		l.log.WithFields(logrus.Fields{
-			"method": method,
-		}).WithFields(fields).Warn(message)
-	} else {
-		l.log.WithFields(fields).Warn(message)
-	}
+
+func (l *Logger) Info(fields map[string]interface{}, data interface{}, message string) {
+	l.BaseLog(fields, data).Info(message)
 }
-func (l *Logger) Error(fields map[string]interface{}, method string, message string) {
-	if method != "" {
-		l.log.WithFields(logrus.Fields{
-			"method": method,
-		}).WithFields(fields).Error(message)
-	} else {
-		l.log.WithFields(fields).Error(message)
-	}
+func (l *Logger) Warn(fields map[string]interface{}, data interface{}, message string) {
+	l.BaseLog(fields, data).Warn(message)
 }
-func (l *Logger) Fatal(fields map[string]interface{}, method string, message string) {
-	if method != "" {
-		l.log.WithFields(logrus.Fields{
-			"method": method,
-		}).WithFields(fields).Fatal(message)
-	} else {
-		l.log.WithFields(fields).Fatal(message)
-	}
+func (l *Logger) Error(fields map[string]interface{}, data interface{}, message string) {
+	l.BaseLog(fields, data).Error(message)
 }
-func (l *Logger) Panic(fields map[string]interface{}, method string, message string) {
-	if method != "" {
-		l.log.WithFields(logrus.Fields{
-			"method": method,
-		}).WithFields(fields).Panic(message)
-	} else {
-		l.log.WithFields(fields).Panic(message)
-	}
+func (l *Logger) Fatal(fields map[string]interface{}, data interface{}, message string) {
+	l.BaseLog(fields, data).Fatal(message)
+}
+func (l *Logger) Panic(fields map[string]interface{}, data interface{}, message string) {
+	l.BaseLog(fields, data).Panic(message)
 }
 
 func (l *Logger) SetFileOutput(file io.Writer) {
@@ -63,11 +52,7 @@ func (l *Logger) SetFileOutput(file io.Writer) {
 }
 
 func NewLogger(name string) (log *Logger) {
-	formatter := new(logrus.TextFormatter)
-	formatter.TimestampFormat = "2006-01-02 15:04:05.000"
-	formatter.FullTimestamp = true
 	l := logrus.New()
-	l.SetFormatter(formatter)
 	log = &Logger{
 		log: l.WithField("service", name),
 	}
