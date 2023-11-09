@@ -30,6 +30,6 @@ func main() {
 		cfg.Database,
 		cfg.DatabasePort, logger)
 	app := app.InitMiddleApplication(ds, logger)
-	api := api.InitMiddledAPI(logger, app)
+	api := api.InitMiddledAPI(cfg.AppHost, cfg.AppPort, logger, app)
 	api.Start()
 }
